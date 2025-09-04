@@ -1,0 +1,61 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome – my_webpage_name</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container" role="main">
+    <header class="brand">
+      <div class="brand__logo" aria-hidden="true">mw</div>
+      <div>
+        <h1>Welcome to <span class="accent">Envirolingo</span></h1>
+        <p class="subtitle">Learn and practice sustainability with interactive, gamified challenges.</p>
+      </div>
+    </header>
+
+    <section class="panel" aria-label="Choose an option">
+      <div class="options">
+        <!-- Option 1: Create an account -->
+        <article class="card" aria-labelledby="create-title">
+          <div class="card__body">
+            <h2 id="create-title">Create an account</h2>
+            <p>New here? Set up your profile to start earning eco-points, badges, and join school leagues.</p>
+            <div class="actions">
+              <a class="btn btn-primary" href="/signup" aria-label="Create an account">Get Started</a>
+              <a class="btn btn-ghost" href="#learn-more">Learn more</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Option 2: Already have an account -->
+        <article class="card" aria-labelledby="login-title">
+          <div class="card__body">
+            <h2 id="login-title">Already have an account?</h2>
+            <p>Welcome back! Log in to continue your streaks, challenges, and class competitions.</p>
+            <div class="actions">
+              <a class="btn btn-primary" href="/login" aria-label="Log in">Log In</a>
+              <a class="btn btn-ghost" href="/forgot-password">Forgot password</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <p class="note">By continuing, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
+    </section>
+
+    <p class="footer">© <span id="year"></span> my_webpage_name • Built for greener campuses</p>
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
+
