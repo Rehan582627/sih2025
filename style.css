@@ -86,4 +86,4 @@ h1{
 .footer a{ color:#9bb4ff; text-decoration:none }
 
 /* small accessibility improvements */
-.btn:focus-visible, a:focus-visible, button:focus-visible{ outline: 3px solid #7aa2ff; outline-offset: 2px; }
+.btn:focus-visible, a:focus-visible, button:focus-visible{ outline: 3px solid #7aa2ff; outline-offset: 2px;}
