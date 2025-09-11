@@ -1,10 +1,11 @@
 <!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Welcome – my_webpage_name</title>
+  <title>Welcome to EcoSarthi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -13,16 +14,16 @@
 <body>
   <main class="container" role="main">
     <header class="brand">
-      <div class="brand__logo" aria-hidden="true">logo</div>
+      <div class="brand__logo" aria-hidden="true"></div>
       <div>
-        <h1>Welcome to <span class="accent">Envirolingo</span></h1>
+        <h1>Welcome to <span class="accent">EcoSarthi</span></h1>
         <p class="subtitle">Learn and practice sustainability with interactive, gamified challenges.</p>
       </div>
     </header>
 
     <section class="panel" aria-label="Choose an option">
       <div class="options">
-        <!-- Option 1: Create an account -->
+    
         <article class="card" aria-labelledby="create-title">
           <div class="card__body">
             <h2 id="create-title">Create an account</h2>
@@ -34,7 +35,7 @@
           </div>
         </article>
 
-        <!-- Option 2: Already have an account -->
+       
         <article class="card" aria-labelledby="login-title">
           <div class="card__body">
             <h2 id="login-title">Already have an account?</h2>
@@ -59,3 +60,176 @@
 </html>
 
 
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSarthi - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reusing your existing CSS variables */
+        :root {
+            --primary-green: #0f9d58;
+            --secondary-green: #43a047;
+            --dark-green: #1b5e20;
+            --accent-yellow: #ffeb3b;
+            --light-yellow: #fdd835;
+            --white: #ffffff;
+            --text-light: #f1f1f1;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* To keep the floating icons within the viewport */
+        }
+        
+        .login-container {
+            width: min(450px, 90%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .login-container h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-light);
+            opacity: 0.8;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-yellow);
+        }
+
+        .login-button {
+            background: var(--accent-yellow);
+            color: var(--dark-green);
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+
+        .login-button:hover {
+            background: var(--light-yellow);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0px 10px 18px rgba(0, 0, 0, 0.3);
+        }
+        
+        .link {
+            display: block;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .link:hover {
+            color: var(--accent-yellow);
+        }
+
+        /* Reusing your floating icons */
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-30px) translateX(20px) rotate(90deg) scale(1.1); }
+            50% { transform: translateY(-60px) translateX(-20px) rotate(180deg) scale(1); }
+            75% { transform: translateY(-30px) translateX(20px) rotate(270deg) scale(0.9); }
+            100% { transform: translateY(0) translateX(0) rotate(360deg) scale(1); }
+        }
+        .floating-icon {
+            position: absolute;
+            width: 50px;
+            opacity: 0.5;
+            animation: float 20s infinite linear;
+            z-index: 1;
+        }
+        .icon1 { top: 10%; left: 5%; animation-duration: 25s; }
+        .icon2 { top: 30%; left: 90%; animation-duration: 30s; width: 60px; }
+        .icon3 { top: 70%; left: 10%; animation-duration: 35s; }
+        .icon4 { top: 50%; left: 80%; animation-duration: 28s; width: 40px; }
+        .icon5 { top: 85%; left: 50%; animation-duration: 22s; width: 65px; }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Welcome Back!</h2>
+        <form>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="login-button">Log In</button>
+        </form>
+        <a href="#" class="link">Forgot Password?</a>
+        <a href="#" class="link">Don't have an account? Sign Up</a>
+    </div>
+
+    <img src="https://img.icons8.com/emoji/48/deciduous-tree.png" class="floating-icon icon1">
+    <img src="https://img.icons8.com/emoji/48/recycling-symbol.png" class="floating-icon icon2">
+    <img src="https://img.icons8.com/emoji/48/seedling.png" class="floating-icon icon3">
+    <img src="https://img.icons8.com/emoji/48/water-wave.png" class="floating-icon icon4">
+    <img src="https://img.icons8.com/emoji/48/sun-emoji.png" class="floating-icon icon5">
+</body>
+</html> -->
