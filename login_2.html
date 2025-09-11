@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoSarthi – Login</title>
+  <style>
+    /* --- ROOT THEME --- */
+    :root {
+      --brand: #00796B;
+      --brand-600: #00897B;
+      --brand-800: #004d40;
+      --primary-green: #0f9d58;
+      --secondary-green: #43a047;
+      --bg: #0d1217;
+      --text: #f0f4f9;
+      --muted: #a0acba;
+      --placeholder: #6a7c8c;
+      --card: rgba(20, 30, 30, 0.85);
+      --border: #2c3e50;
+      --shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    }
+
+    /* LEFT PANEL */
+    .left {
+      background: url('https://img.freepik.com/free-vector/flat-design-eco-friendly-background_23-2150520981.jpg?w=740') center/cover no-repeat;
+      position: relative;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 50, 40, 0.6);
+    }
+    .left h1 {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    /* RIGHT PANEL */
+    .right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(13, 18, 23, 0.9);
+    }
+
+    .login-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      display: grid;
+      gap: 24px;
+      text-align: center;
+    }
+
+    .brand__logo {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand), var(--brand-600));
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 0 20px rgba(0, 137, 123, 0.6);
+    }
+
+    .login-card h2 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 700;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .input-group {
+      text-align: left;
+      display: grid;
+      gap: 6px;
+    }
+    .input-group label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .input-group input {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: var(--radius);
+      background: rgba(0, 184, 148, 0.15);
+      color: var(--text);
+      font-size: 15px;
+      transition: all .25s ease;
+    }
+    .input-group input::placeholder {
+      color: var(--placeholder);
+    }
+    .input-group input:focus {
+      outline: none;
+      background: rgba(0, 184, 148, 0.25);
+      box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.35);
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      padding: 14px 20px;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      transition: all .25s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand), var(--brand-600));
+      color: white;
+      box-shadow: 0 8px 20px rgba(0, 121, 107, 0.4);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 10px 26px rgba(0, 121, 107, 0.6);
+    }
+
+    .note {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .note a {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      body {
+        grid-template-columns: 1fr;
+      }
+      .left { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- LEFT ECO PANEL -->
+  <div class="left">
+    <div class="overlay"></div>
+    <h1>EcoSarthi<br>Learn • Play • Sustain</h1>
+  </div>
+
+  <!-- RIGHT LOGIN PANEL -->
+  <div class="right">
+    <div class="login-card">
+      <div class="brand__logo">🌿</div>
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Login to continue your eco-journey</p>
+
+      <form>
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email">
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password">
+        </div>
+        <button class="btn btn-primary" type="submit">Login</button>
+      </form>
+
+      <p class="note">Don’t have an account? <a href="#">Sign up</a></p>
+    </div>
+  </div>
+</body>
+</html>
