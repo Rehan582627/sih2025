@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EcoSarthi — Dashboard</title>
+
+  <!-- Fonts & icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.css" integrity="" crossorigin="anonymous" />
+
+  <!-- Chart.js for charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Confetti lib (canvas-confetti) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* ====== Root Theme & Reset ====== */
+    :root{
+      --primary-green: #0f766e;
+      --secondary-green: #34d399;
+      --accent-blue: #0ea5e9;
+      --glass-bg: rgba(255,255,255,0.08);
+      --card-bg: rgba(255,255,255,0.9);
+      --muted: #6b7280;
+      --radius: 14px;
+      --max-width: 1200px;
+      --gap: 1rem;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    body{
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.35;
+      padding:2rem;
+      display:flex;
+      justify-content:center;
+    }
+
+    /* Container */
+    .app {
+      width:100%;
+      max-width:var(--max-width);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border-radius:20px;
+      padding:1.25rem;
+      box-shadow: 0 10px 40px rgba(2,6,23,0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Header */
+    header.topbar{
+      display:flex;
+      gap:var(--gap);
+      align-items:center;
+      justify-content:space-between;
+    }
+    .brand {
+      display:flex;
+      gap:0.75rem;
+      align-items:center;
+    }
+    .logo {
+      width:56px;height:56px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      box-shadow: 0 6px 18px rgba(2,6,23,0.2), inset 0 -6px 18px rgba(0,0,0,0.06);
+      font-weight:800;color:white;font-size:20px;
+    }
+    .brand h1{font-size:1.15rem;color: #f8fafc;margin:0}
+    .brand p{margin:0;font-size:0.8rem;color:rgba(255,255,255,0.85)}
+
+    .right-actions {
+      display:flex;gap:0.75rem;align-items:center;
+    }
+
+    /* Layout grid */
+    .grid {
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:1rem;
+      margin-top:1rem;
+    }
+
+    /* Left column (profile, challenges, badges) */
+    .panel {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding:1rem;
+      box-shadow: 0 8px 26px rgba(2,6,23,0.18);
+      border:1px solid rgba(15,23,42,0.04);
+    }
+    .profile-head {
+      display:flex;gap:0.75rem;align-items:center;
+    }
+    .avatar {
+      width:84px;height:84px;border-radius:18px;
+      overflow:hidden;border:3px solid rgba(255,255,255,0.4);
+      display:flex;align-items:center;justify-content:center;background:#e6ffef;
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .profile-meta {flex:1}
+    .greeting {font-weight:700;font-size:1.1rem;margin-bottom:0.15rem;color:#052f2a}
+    .meta-sub {font-size:0.85rem;color:var(--muted)}
+
+    .avatar-actions {display:flex;gap:0.5rem;margin-top:0.6rem}
+    .btn {padding:0.55rem 0.8rem;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+    .btn.primary {background:linear-gradient(90deg,#10b981,#059669);color:white}
+    .btn.ghost {background:transparent;border:1px solid rgba(15,23,42,0.06);color:#052f2a}
+
+    /* Progress card */
+    .progress-card {margin-top:1rem}
+    .score {display:flex;align-items:center;gap:1rem}
+    .score-value {font-size:2.2rem;font-weight:800;color:var(--primary-green)}
+    .score-meta{font-size:0.9rem;color:var(--muted)}
+    .progress-track{background:rgba(15,23,42,0.06);height:14px;border-radius:999px;margin-top:0.85rem;overflow:hidden}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,#34d399,#059669);transition:width 1.4s cubic-bezier(.2,.9,.2,1)}
+    .progress-info{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted);margin-top:0.5rem}
+
+    /* Challenges */
+    .chall-list{margin-top:1rem;display:flex;flex-direction:column;gap:0.6rem}
+    .challenge {
+      display:flex;align-items:center;justify-content:space-between;padding:0.6rem;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.98), #f7fffb);box-shadow:0 6px 18px rgba(2,6,23,0.05)
+    }
+    .challenge .left {display:flex;gap:0.6rem;align-items:center}
+    .checkbox {
+      width:36px;height:36px;border-radius:9px;border:2px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary-green);cursor:pointer;background:white;
+    }
+    .challenge .title {font-weight:600;color:#052f2a}
+    .streak {font-size:0.78rem;color:var(--muted)}
+
+    /* Badges */
+    .badges-grid {display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.8rem}
+    .badge {
+      min-width:110px;padding:0.6rem;border-radius:12px;background:linear-gradient(180deg,white,#f4fff8);display:flex;gap:0.5rem;align-items:center;justify-content:center;border-left:6px solid rgba(0,0,0,0.04);cursor:pointer;transition:transform .18s,box-shadow .18s;
+    }
+    .badge.locked{opacity:0.55;filter:grayscale(20%)}
+    .badge:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(2,6,23,0.08)}
+
+    /* Right column (main) */
+    .main {
+      display:flex;flex-direction:column;gap:1rem;
+    }
+
+    .hero-glass {
+      display:flex;justify-content:space-between;align-items:center;padding:1rem;border-radius:14px;background:var(--glass-bg);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.06)
+    }
+    .hero-left {max-width:60%}
+    .hero-title{font-size:1.5rem;color:white;font-weight:800}
+    .hero-sub{color:rgba(255,255,255,0.9);margin-top:0.25rem;font-size:0.95rem}
+    .hero-actions{display:flex;gap:0.6rem;align-items:center}
+
+    .quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:0.75rem}
+    .stat {padding:0.9rem;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.95),white);text-align:center}
+    .stat h4{margin:0;font-size:0.95rem;color:var(--muted)}
+    .stat p{margin:6px 0 0;font-weight:700;color:var(--primary-green)}
+
+    /* Charts + Right lower layout */
+    .lower-grid {
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:1rem;
+    }
+    .card-plain {background:white;border-radius:12px;padding:1rem;box-shadow:0 8px 26px rgba(2,6,23,0.06);border:1px solid rgba(15,23,42,0.03)}
+
+    /* Charts canvas sizing */
+    .chart-wrap {height:280px;padding:0.25rem}
+    canvas {max-width:100%}
+
+    /* Leaderboard */
+    .leader {display:flex;flex-direction:column;gap:0.5rem}
+    .leader-row {display:flex;align-items:center;gap:0.6rem;justify-content:space-between;padding:0.45rem;border-radius:10px;background:linear-gradient(180deg,#fbfffc,#f7fff7)}
+    .user-meta {display:flex;gap:0.5rem;align-items:center}
+    .user-meta img{width:36px;height:36px;border-radius:8px;object-fit:cover}
+
+    /* News carousel */
+    .news-carousel {display:flex;gap:0.6rem;overflow:hidden}
+    .news-card {min-width:280px;padding:0.9rem;border-radius:10px;background:linear-gradient(180deg,#f9fffb,#fcfffd)}
+
+    /* Chat preview */
+    .chat-preview {display:flex;flex-direction:column;gap:0.6rem}
+    .msg {display:flex;gap:0.6rem;align-items:flex-start}
+    .msg .bubble {background:#f1f5f9;padding:0.6rem;border-radius:10px;max-width:85%}
+
+    /* Footer small */
+    .small {font-size:0.82rem;color:var(--muted);text-align:center;margin-top:1rem}
+
+    /* responsive */
+    @media (max-width:980px){
+      .grid {grid-template-columns:1fr; }
+      .lower-grid {grid-template-columns:1fr}
+      .hero-left{max-width:100%}
+      .quick-stats {grid-template-columns:repeat(2,1fr)}
+    }
+
+    /* Accessibility focus */
+    button:focus, .badge:focus, .checkbox:focus {outline:3px solid rgba(16,185,129,0.18);outline-offset:2px}
+
+    /* Micro-animations - subtle */
+    .micro-scale {transition:transform .22s}
+    .micro-scale:hover{transform:scale(1.03)}
+    .glow {box-shadow: 0 6px 30px rgba(52,211,153,0.18);}
+
+  </style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="EcoSarthi Dashboard">
+    <!-- TOPBAR -->
+    <header class="topbar" role="banner">
+      <div class="brand" aria-hidden="false">
+        <div class="logo" aria-hidden="true">ES</div>
+        <div>
+          <h1>EcoSarthi</h1>
+          <p>Learn • Play • Protect</p>
+        </div>
+      </div>
+
+      <div class="right-actions" role="navigation" aria-label="Top actions">
+        <button id="notifBtn" class="btn ghost" aria-label="Notifications">🔔 Notifications</button>
+        <button id="helpBtn" class="btn ghost" aria-label="Help">❓ Help</button>
+      </div>
+    </header>
+
+    <!-- MAIN GRID -->
+    <div class="grid" role="main">
+      <!-- LEFT COLUMN -->
+      <aside class="panel" aria-label="Profile and challenges">
+        <!-- Profile -->
+        <div class="profile-head" id="profileBlock">
+          <div class="avatar" aria-hidden="false" id="avatarWrap">
+            <img id="avatarImg" src="https://i.pravatar.cc/300?img=12" alt="User avatar">
+          </div>
+          <div class="profile-meta">
+            <div class="greeting" id="greeting">Hello, Rehan 👋</div>
+            <div class="meta-sub" id="metaSub">Grade: 10 • Green Learner</div>
+
+            <div class="avatar-actions" style="margin-top:8px">
+              <label class="btn ghost" for="avatarInput" style="cursor:pointer">Change Avatar</label>
+              <input id="avatarInput" type="file" accept="image/*" style="display:none" aria-label="Upload avatar">
+              <button id="editProfile" class="btn primary">Edit Profile</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-card">
+          <div class="score">
+            <div>
+              <div class="score-value" id="scoreValue">250</div>
+              <div class="score-meta">Eco-Points</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:0.86rem;color:var(--muted)">Level</div>
+              <div style="font-weight:800;color:var(--primary-green)">Green Learner</div>
+            </div>
+          </div>
+          <div class="progress-track" aria-hidden="true" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+          <div class="progress-info" aria-hidden="true">
+            <div id="progressText">Progress to next badge: <strong id="progPercent">75%</strong></div>
+            <div id="nextBadge">Next: Tree Planter</div>
+          </div>
+        </div>
+
+        <!-- Challenges -->
+        <div style="margin-top:1rem;">
+          <h3 style="margin-bottom:0.5rem">Daily / Weekly Challenges</h3>
+          <div class="chall-list" id="challengesList" aria-live="polite">
+            <!-- Challenges will be injected -->
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div style="margin-top:1rem;">
+          <h3 style="margin-bottom:0.5rem">Badges</h3>
+          <div class="badges-grid" id="badgesGrid">
+            <!-- badges injected -->
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- RIGHT COLUMN (Main) -->
+      <section class="main">
+        <!-- Hero / Quick -->
+        <div class="hero-glass micro-scale" role="region" aria-label="Welcome">
+          <div class="hero-left">
+            <div class="hero-title">Welcome back, <span id="shortName">Rehan</span> — keep the planet smiling 🌍</div>
+            <div class="hero-sub">Complete challenges, earn badges, and improve your community impact.</div>
+
+            <div class="quick-stats" style="margin-top:1rem">
+              <div class="stat" aria-hidden="true">
+                <h4>Trees Planted</h4><p id="stat-trees">120</p>
+              </div>
+              <div class="stat" aria-hidden="true">
+                <h4>Waste Recycled (kg)</h4><p id="stat-waste">200</p>
+              </div>
+              <div class="stat" aria-hidden="true">
+                <h4>Water Saved (L)</h4><p id="stat-water">1500</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <button id="startQuest" class="btn primary micro-scale" aria-label="Start a quest">Start Quest</button>
+            <button id="shareProgress" class="btn ghost" aria-label="Share progress">Share</button>
+          </div>
+        </div>
+
+        <!-- Lower Grid: charts + sidebar -->
+        <div class="lower-grid">
+          <!-- Left: Charts & Progression -->
+          <div>
+            <div class="card-plain micro-scale">
+              <h3 style="margin:0 0 0.6rem 0">Your Impact</h3>
+              <div class="chart-wrap">
+                <canvas id="personalChart" role="img" aria-label="Personal impact chart"></canvas>
+              </div>
+              <p class="small" style="margin-top:0.75rem;color:var(--muted)">Track your progress across activities. Hover the chart for details.</p>
+            </div>
+
+            <div class="card-plain micro-scale" style="margin-top:0.9rem">
+              <h3 style="margin:0 0 0.6rem 0">Community Impact</h3>
+              <div class="chart-wrap">
+                <canvas id="communityChart" role="img" aria-label="Community impact chart"></canvas>
+              </div>
+            </div>
+
+            <div class="card-plain micro-scale" style="margin-top:0.9rem">
+              <h3 style="margin:0 0 0.6rem 0">Story Progression</h3>
+              <div style="display:flex;align-items:center;gap:0.6rem">
+                <div style="flex:1">
+                  <div style="height:12px;background:#eefce9;border-radius:999px;overflow:hidden">
+                    <div id="storyFill" style="width:45%;height:100%;background:linear-gradient(90deg,#34d399,#059669)"></div>
+                  </div>
+                  <div class="small" style="margin-top:0.5rem;color:var(--muted)">Chapter 3: Seed to Sapling — Progress 45%</div>
+                </div>
+                <div style="min-width:120px;text-align:right">
+                  <button id="storyBtn" class="btn primary">Continue Story</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right sidebar: leaderboard, news, chat -->
+          <aside style="display:flex;flex-direction:column;gap:0.9rem;">
+            <div class="card-plain micro-scale">
+              <h3 style="margin:0 0 0.6rem 0">Team Leaderboard</h3>
+              <div class="leader" id="leaderboard">
+                <!-- rows injected -->
+              </div>
+            </div>
+
+            <div class="card-plain micro-scale">
+              <h3 style="margin:0 0 0.6rem 0">Trending Eco News</h3>
+              <div class="news-carousel" id="newsCarousel" aria-live="polite">
+                <!-- news items -->
+              </div>
+              <div style="display:flex;gap:0.6rem;margin-top:0.6rem">
+                <button id="newsPrev" class="btn ghost">◀</button>
+                <button id="newsNext" class="btn ghost">▶</button>
+              </div>
+            </div>
+
+            <div class="card-plain micro-scale">
+              <h3 style="margin:0 0 0.6rem 0">Community Preview</h3>
+              <div class="chat-preview" id="chatPreview">
+                <!-- sample messages -->
+              </div>
+              <div style="margin-top:0.6rem;display:flex;gap:0.5rem">
+                <input id="chatInput" class="btn" style="flex:1;border-radius:10px;border:1px solid rgba(2,6,23,0.06);padding:0.55rem" placeholder="Write a short message..." aria-label="Write a message">
+                <button id="postMsg" class="btn primary">Post</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="small">Made with ❤️ • EcoSarthi Demo • Accessible & responsive</div>
+      </section>
+    </div>
+  </div>
+
+  <!-- JS: Modular, commented -->
+  <script>
+    /**
+     * EcoSarthi Dashboard (single-file)
+     * - Modular functions
+     * - Uses Chart.js + canvas-confetti
+     * - Persists profile and progress to localStorage
+     * - Designed to be connected to real backend easily
+     */
+
+    /* ---------- Utilities ---------- */
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    // safe localStorage wrapper
+    const storage = {
+      get(key, fallback=null){
+        try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+        catch(e){return fallback}
+      },
+      set(key, val){
+        try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
+      }
+    };
+
+    /* ---------- Initial demo data ---------- */
+    const DEMO = {
+      profile: { name: 'Rehan', avatar: 'https://i.pravatar.cc/300?img=12', grade: '10' },
+      points: 250,
+      progressPct: 75,
+      nextBadgeName: 'Tree Planter',
+      stats: { trees: 120, waste: 200, water: 1500 },
+      challenges: [
+        { id: 'c1', title: 'Segregate your household waste', streak: 3, doneToday: false, type: 'daily' },
+        { id: 'c2', title: 'Avoid single-use plastic today', streak: 1, doneToday: true, type: 'daily' },
+        { id: 'c3', title: 'Plant a sapling (weekly)', streak: 0, doneToday: false, type: 'weekly' },
+      ],
+      badges: [
+        { id: 'b1', name: 'Water Saver', unlocked: true, desc: 'Saved 1000 L' },
+        { id: 'b2', name: 'Plastic-Free Hero', unlocked: true, desc: '7-day plastic-free streak' },
+        { id: 'b3', name: 'Tree Planter', unlocked: false, desc: 'Plant 5 saplings' },
+      ],
+      leaderboard: [
+        { name: 'Aditi', avatar:'https://i.pravatar.cc/60?img=68', pts:520 },
+        { name: 'Rahul', avatar:'https://i.pravatar.cc/60?img=32', pts:500 },
+        { name: 'Sneha', avatar:'https://i.pravatar.cc/60?img=44', pts:470 },
+        { name: 'You', avatar:'https://i.pravatar.cc/60?img=12', pts:250 },
+      ],
+      news: [
+        { title:'Community tree drive plants 2k saplings', snippet:'Students & volunteers planted 2000 saplings this weekend.' },
+        { title:'Waste segregation program launched in City X', snippet:'Schools start segregation drives.'},
+        { title:'Water conservation week: simple tips', snippet:'How to save 20% water at home.'}
+      ],
+      communityMsgs: [
+        { author:'Aditi', avatar:'https://i.pravatar.cc/48?img=68', text:'Planted my first tree today! 🌱' },
+        { author:'Rahul', avatar:'https://i.pravatar.cc/48?img=32', text:'Anyone tips on composting?' },
+      ]
+    };
+
+    /* ---------- App State ---------- */
+    const AppState = {
+      profile: storage.get('es_profile', DEMO.profile),
+      points: storage.get('es_points', DEMO.points),
+      progressPct: storage.get('es_progress', DEMO.progressPct),
+      challenges: storage.get('es_challenges', DEMO.challenges),
+      badges: storage.get('es_badges', DEMO.badges),
+      stats: storage.get('es_stats', DEMO.stats),
+      leaderboard: storage.get('es_leader', DEMO.leaderboard),
+      news: storage.get('es_news', DEMO.news),
+      communityMsgs: storage.get('es_msgs', DEMO.communityMsgs),
+    };
+
+    /* ---------- Profile: avatar upload & greetings ---------- */
+    const avatarInput = $('#avatarInput');
+    const avatarImg = $('#avatarImg');
+    const greeting = $('#greeting');
+    const shortName = $('#shortName');
+
+    function renderProfile(){
+      const p = AppState.profile;
+      avatarImg.src = p.avatar;
+      greeting.textContent = computeGreeting(p.name);
+      shortName.textContent = p.name.split(' ')[0];
+      // meta
+      $('#metaSub').textContent = `Grade: ${p.grade} • ${deriveLevel(AppState.points)}`;
+    }
+
+    // Compute friendly greeting based on time
+    function computeGreeting(name){
+      const hr = new Date().getHours();
+      let msg = 'Hello';
+      if(hr<12) msg = 'Good morning';
+      else if(hr<17) msg = 'Good afternoon';
+      else msg = 'Good evening';
+      return `${msg}, ${name} 👋`;
+    }
+
+    // derive level from points (simple)
+    function deriveLevel(points){
+      if(points >= 500) return 'Eco Champion';
+      if(points >= 250) return 'Green Learner';
+      return 'Seedling';
+    }
+
+    avatarInput.addEventListener('change', (ev)=>{
+      const f = ev.target.files && ev.target.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const data = e.target.result;
+        AppState.profile.avatar = data;
+        storage.set('es_profile', AppState.profile);
+        renderProfile();
+      };
+      reader.readAsDataURL(f);
+    });
+
+    $('#editProfile').addEventListener('click', ()=>{
+      const newName = prompt('Enter display name:', AppState.profile.name);
+      if(newName) {
+        AppState.profile.name = newName;
+        storage.set('es_profile', AppState.profile);
+        renderProfile();
+      }
+    });
+
+    /* ---------- Progress bar animation ---------- */
+    const progressFill = $('#progressFill');
+    const progPercent = $('#progPercent');
+    function animateProgress(toPct){
+      // clamp
+      toPct = Math.max(0, Math.min(100, toPct));
+      progPercent.textContent = `${toPct}%`;
+      // accessibility
+      const pb = document.querySelector('[role="progressbar"]');
+      pb.setAttribute('aria-valuenow', toPct);
+      // animate width
+      requestAnimationFrame(()=>progressFill.style.width = toPct + '%');
+    }
+
+    /* ---------- Challenges list ---------- */
+    const challengesList = $('#challengesList');
+
+    function renderChallenges(){
+      challengesList.innerHTML = '';
+      AppState.challenges.forEach(ch=>{
+        const el = document.createElement('div');
+        el.className = 'challenge micro-scale';
+        el.setAttribute('tabindex', '0');
+        el.innerHTML = `
+          <div class="left">
+            <div class="checkbox" role="button" data-id="${ch.id}" aria-pressed="${ch.doneToday}" tabindex="0">
+              ${ch.doneToday ? '✓' : '+'}
+            </div>
+            <div>
+              <div class="title">${escapeHtml(ch.title)}</div>
+              <div class="streak">${ch.type} • Streak: ${ch.streak} day(s)</div>
+            </div>
+          </div>
+          <div style="min-width:90px;text-align:right">
+            <div style="font-size:0.85rem;color:var(--muted)">${ch.type == 'daily' ? 'Daily' : 'Weekly'}</div>
+            <div style="font-weight:700;color:${ch.doneToday? 'green':'#666'}">${ch.doneToday ? 'Completed' : 'Pending'}</div>
+          </div>
+        `;
+        challengesList.appendChild(el);
+
+        // checkbox handlers
+        const cb = el.querySelector('.checkbox');
+        cb.addEventListener('click', () => toggleChallenge(ch.id));
+        cb.addEventListener('keydown', (e)=>{ if(e.key==='Enter') toggleChallenge(ch.id) });
+      });
+    }
+
+    function toggleChallenge(id){
+      const ch = AppState.challenges.find(c=>c.id===id);
+      if(!ch) return;
+      ch.doneToday = !ch.doneToday;
+      if(ch.doneToday) ch.streak = (ch.streak||0) + 1;
+      else ch.streak = Math.max(0, ch.streak-1);
+      storage.set('es_challenges', AppState.challenges);
+      // award points for completion
+      if(ch.doneToday) {
+        awardPoints(10, `Completed: ${ch.title}`);
+      } else {
+        awardPoints(-10, `Marked undone: ${ch.title}`);
+      }
+      renderChallenges();
+      checkForBadgeUnlocks();
+    }
+
+    /* ---------- Badges rendering & unlock ---------- */
+    const badgesGrid = $('#badgesGrid');
+
+    function renderBadges(){
+      badgesGrid.innerHTML = '';
+      AppState.badges.forEach(b=>{
+        const el = document.createElement('div');
+        el.className = 'badge micro-scale' + (b.unlocked ? '' : ' locked');
+        el.setAttribute('tabindex','0');
+        el.setAttribute('role','button');
+        el.title = b.desc;
+        el.innerHTML = `<div style="font-size:1.05rem;font-weight:800">${b.unlocked ? '🏅' : '🔒'}</div>
+                        <div style="font-weight:700">${escapeHtml(b.name)}</div>`;
+        badgesGrid.appendChild(el);
+
+        el.addEventListener('click', ()=> {
+          if(b.unlocked) showBadgeShare(b);
+          else alert('Badge locked. Complete more challenges to unlock!');
+        });
+      });
+    }
+
+    function checkForBadgeUnlocks(){
+      // Example rule: unlock Tree Planter when trees >=125 OR progress>=75 OR points>=300
+      const badge = AppState.badges.find(x=>x.id==='b3'); // tree planter
+      if(badge && !badge.unlocked){
+        if(AppState.stats.trees >= 125 || AppState.progressPct >= 80 || AppState.points >= 300){
+          badge.unlocked = true;
+          storage.set('es_badges', AppState.badges);
+          renderBadges();
+          // celebration
+          celebrateUnlock(badge.name);
+        }
+      }
+    }
+
+    function celebrateUnlock(name){
+      // confetti
+      confetti({
+        particleCount: 130,
+        spread: 80,
+        origin: { y: 0.3 },
+        colors: ['#34d399','#10b981','#059669','#8ef6c2']
+      });
+      // modal-ish toast
+      const toast = document.createElement('div');
+      toast.style.position='fixed';
+      toast.style.left='50%'; toast.style.top='18%';
+      toast.style.transform='translateX(-50%)';
+      toast.style.background='white'; toast.style.padding='1rem 1.2rem';
+      toast.style.borderRadius='12px';
+      toast.style.boxShadow='0 10px 30px rgba(2,6,23,0.2)';
+      toast.style.fontWeight='700';
+      toast.textContent = `🎉 Badge unlocked: ${name}`;
+      document.body.appendChild(toast);
+      setTimeout(()=>{ toast.style.opacity='0'; toast.remove(); }, 3200);
+    }
+
+    /* ---------- Award points function ---------- */
+    function awardPoints(n, reason=''){
+      AppState.points = (AppState.points || 0) + n;
+      AppState.progressPct = Math.min(100, Math.round((AppState.points / 400) * 100)); // sample
+      if(AppState.progressPct < 0) AppState.progressPct = 0;
+      storage.set('es_points', AppState.points);
+      storage.set('es_progress', AppState.progressPct);
+
+      // update UI
+      $('#scoreValue').textContent = AppState.points;
+      animateProgress(AppState.progressPct);
+
+      // micro confetti on positive
+      if(n > 0){
+        confetti({ particleCount: 30, spread: 55, origin:{y:0.35} });
+      }
+    }
+
+    /* ---------- Charts (Chart.js) ---------- */
+    let personalChart = null;
+    let communityChart = null;
+    function initCharts(){
+      const pctx = document.getElementById('personalChart').getContext('2d');
+      personalChart = new Chart(pctx, {
+        type: 'line',
+        data: {
+          labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+          datasets: [
+            { label:'Eco-points', data:[20, 35, 40, 60, 90, 30, AppState.points], tension:0.28, borderWidth:3, pointRadius:4, borderColor:'#059669', backgroundColor: 'rgba(16,185,129,0.08)', fill:true }
+          ]
+        },
+        options: { responsive:true, plugins:{legend:{display:false}} , scales:{y:{beginAtZero:true}} }
+      });
+
+      const cctx = document.getElementById('communityChart').getContext('2d');
+      communityChart = new Chart(cctx, {
+        type: 'bar',
+        data:{
+          labels:['Trees','Waste (kg)','Water (L)'],
+          datasets:[{label:'Community', data:[ AppState.stats.trees*10, AppState.stats.waste*5, AppState.stats.water*2 ], backgroundColor:['#34d399','#059669','#0ea5e9']}]
+        },
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+      });
+    }
+
+    /* ---------- Leaderboard ---------- */
+    function renderLeaderboard(){
+      const el = $('#leaderboard'); el.innerHTML = '';
+      AppState.leaderboard.sort((a,b)=>b.pts-a.pts);
+      AppState.leaderboard.forEach((u,i)=>{
+        const row = document.createElement('div');
+        row.className = 'leader-row';
+        row.innerHTML = `<div class="user-meta"><img src="${u.avatar}" alt="${u.name} avatar"><div style="display:flex;flex-direction:column"><strong>${u.name}</strong><span class="small" style="color:var(--muted)">${i===0? 'Top Performer':''}</span></div></div><div style="font-weight:800;color:var(--primary-green)">${u.pts} pts</div>`;
+        el.appendChild(row);
+      });
+    }
+
+    /* ---------- News carousel ---------- */
+    const newsCarousel = $('#newsCarousel');
+    let newsIndex = 0;
+    function renderNews(){
+      newsCarousel.innerHTML = '';
+      AppState.news.forEach((n, idx)=>{
+        const card = document.createElement('div');
+        card.className = 'news-card micro-scale';
+        card.innerHTML = `<strong>${escapeHtml(n.title)}</strong><div style="margin-top:6px;color:var(--muted)">${escapeHtml(n.snippet)}</div>`;
+        newsCarousel.appendChild(card);
+      });
+      scrollNewsTo(newsIndex);
+    }
+    function scrollNewsTo(i){
+      const children = Array.from(newsCarousel.children);
+      if(children[i]) children[i].scrollIntoView({behavior:'smooth', inline:'start'});
+    }
+    $('#newsPrev').addEventListener('click', ()=>{ newsIndex = Math.max(0, newsIndex-1); scrollNewsTo(newsIndex); });
+    $('#newsNext').addEventListener('click', ()=>{ newsIndex = Math.min(AppState.news.length-1, newsIndex+1); scrollNewsTo(newsIndex); });
+
+    /* ---------- Chat / Community ---------- */
+    const chatPreview = $('#chatPreview');
+    function renderChat(){
+      chatPreview.innerHTML = '';
+      AppState.communityMsgs.slice().reverse().forEach(m=>{
+        const item = document.createElement('div');
+        item.className = 'msg';
+        item.innerHTML = `<img src="${m.avatar}" alt="${m.author}" style="width:36px;height:36px;border-radius:8px;object-fit:cover"><div><div style="font-weight:700">${escapeHtml(m.author)}</div><div class="bubble">${escapeHtml(m.text)}</div></div>`;
+        chatPreview.appendChild(item);
+      });
+    }
+    $('#postMsg').addEventListener('click', ()=>{
+      const val = $('#chatInput').value.trim();
+      if(!val) return alert('Message is empty');
+      const newMsg = { author: AppState.profile.name, avatar: AppState.profile.avatar, text: val };
+      AppState.communityMsgs.push(newMsg);
+      storage.set('es_msgs', AppState.communityMsgs);
+      $('#chatInput').value = '';
+      renderChat();
+    });
+
+    /* ---------- Social sharing ---------- */
+    $('#shareProgress').addEventListener('click', shareProgress);
+    function shareProgress(){
+      const text = `I have ${AppState.points} eco-points on EcoSarthi! Join me: https://ecosarthi.example/`;
+      if(navigator.share){
+        navigator.share({title:'My EcoSarthi Progress', text}).catch(()=>alert('Share canceled'));
+      } else {
+        // fallback: copy to clipboard + show
+        navigator.clipboard.writeText(text).then(()=> alert('Progress copied to clipboard. Share anywhere!'));
+      }
+    }
+
+    /* ---------- Story continue (demo) ---------- */
+    $('#storyBtn').addEventListener('click', ()=>{
+      awardPoints(40, 'Completed story mission');
+      // progress story
+      const currentWidth = parseInt(document.getElementById('storyFill').style.width || '45%');
+      const newW = Math.min(100, currentWidth + 10);
+      document.getElementById('storyFill').style.width = newW + '%';
+      if(newW >= 100) celebrateUnlock('Story Master');
+    });
+
+    /* ---------- Start quest button (demo) ---------- */
+    $('#startQuest').addEventListener('click', ()=>{
+      alert('Quest started: Neighborhood Cleanup. Complete it and upload evidence to earn 60 points!');
+    });
+
+    /* ---------- Badge share modal (simple) ---------- */
+    function showBadgeShare(badge){
+      const text = `I unlocked the ${badge.name} badge on EcoSarthi! ${badge.desc}`;
+      if(navigator.share){
+        navigator.share({title:'Badge unlocked!', text});
+      } else {
+        navigator.clipboard.writeText(text).then(()=> alert('Badge text copied — share it on social!'));
+      }
+    }
+
+    /* ---------- Small helpers ---------- */
+    function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+    /* ---------- Initialize UI ---------- */
+    function initUI(){
+      // render profile & components
+      renderProfile();
+      $('#scoreValue').textContent = AppState.points;
+      $('#stat-trees').textContent = AppState.stats.trees;
+      $('#stat-waste').textContent = AppState.stats.waste;
+      $('#stat-water').textContent = AppState.stats.water;
+      $('#nextBadge').textContent = `Next: ${AppState.nextBadgeName}`;
+      // progress
+      animateProgress(AppState.progressPct);
+      // challenges
+      if(!AppState.challenges || !AppState.challenges.length) AppState.challenges = DEMO.challenges;
+      renderChallenges();
+      // badges
+      renderBadges();
+      // charts
+      initCharts();
+      // leader
+      renderLeaderboard();
+      // news
+      renderNews();
+      // chat
+      renderChat();
+
+      // autoplay minor effect
+      document.querySelectorAll('.micro-scale').forEach(el=>{
+        el.addEventListener('mouseover', ()=> el.classList.add('glow'));
+        el.addEventListener('mouseout', ()=> el.classList.remove('glow'));
+      });
+
+      // menu shortcuts
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 's' && (e.ctrlKey||e.metaKey)){
+          e.preventDefault(); $('#shareProgress').click();
+        }
+      });
+    }
+
+    /* ---------- Accessibility niceties ---------- */
+    // Provide keyboard control for leaderboard rows (aria)
+    document.addEventListener('focusin',(e)=>{
+      if(e.target.matches('.leader-row')) e.target.setAttribute('aria-selected','true');
+    });
+
+    /* ---------- Escape hatch: reset demo data ---------- */
+    window.resetDemo = function(){
+      localStorage.clear();
+      location.reload();
+    };
+
+    /* ---------- Run ---------- */
+    initUI();
+
+    /* ---------- Expose some for debugging in console ---------- */
+    window.EcoSarthi = { AppState, awardPoints, resetDemo };
+
+  </script>
+</body>
+</html>
