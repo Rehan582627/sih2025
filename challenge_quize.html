@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoSarthi - Green Learning Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== GLOBAL STYLES ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    body { background-color: #f4f8f6; color: #333; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    header h1 { font-size: 1.8rem; }
+
+    /* ===== NAVIGATION ===== */
+    nav {
+      display: flex;
+      gap: 1rem;
+    }
+    nav a {
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+    nav a:hover { background-color: rgba(255,255,255,0.2); }
+
+    /* ===== MAIN LAYOUT ===== */
+    main {
+      padding: 6rem 2rem 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* ===== CARD STYLES ===== */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 1.5rem; }
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.15); }
+    .card h3 { margin-bottom: 0.5rem; color: #388e3c; }
+    .card p { font-size: 0.9rem; margin-bottom: 1rem; }
+
+    /* ===== PROGRESS BARS ===== */
+    .progress-container { background: #e0e0e0; border-radius: 20px; overflow: hidden; height: 12px; margin-bottom: 0.5rem; }
+    .progress { height: 100%; background: linear-gradient(90deg, #4caf50, #81c784); width: 0%; transition: width 1s; border-radius: 20px; }
+
+    /* ===== BADGES ===== */
+    .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .badge {
+      background-color: #a5d6a7;
+      padding: 0.4rem 0.7rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      color: #fff;
+      animation: bounce 1s ease-in-out forwards;
+    }
+    @keyframes bounce { 0% { transform: scale(0.5); } 100% { transform: scale(1); } }
+
+    /* ===== DASHBOARD ===== */
+    .dashboard { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .dashboard .card { flex: 1; text-align: center; }
+
+    /* ===== LEADERBOARD ===== */
+    .leaderboard { margin-top: 2rem; }
+    .leaderboard table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .leaderboard th, .leaderboard td { padding: 1rem; text-align: left; }
+    .leaderboard th { background-color: #4caf50; color: #fff; }
+    .leaderboard tr:nth-child(even) { background-color: #f2f9f4; }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      background: #388e3c;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover { background: #2e7d32; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      header { flex-direction: column; align-items: flex-start; }
+      nav { flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>EcoSarthi 🌱</h1>
+  <nav>
+    <a href="#lessons">Lessons</a>
+    <a href="#challenges">Challenges</a>
+    <a href="#quizzes">Quizzes</a>
+    <a href="#tasks">Real-World Tasks</a>
+  </nav>
+</header>
+
+<main>
+  <!-- DASHBOARD -->
+  <section class="dashboard">
+    <div class="card">
+      <h3>Eco Points</h3>
+      <p id="ecoPoints">0</p>
+      <button class="btn" onclick="earnPoints(10)">Earn 10 Points</button>
+    </div>
+    <div class="card">
+      <h3>Badges</h3>
+      <div class="badges" id="badges">
+        <!-- Badges appear here -->
+      </div>
+    </div>
+    <div class="card">
+      <h3>Streak</h3>
+      <p id="streak">0 days</p>
+      <button class="btn" onclick="increaseStreak()">Add Day</button>
+    </div>
+  </section>
+
+  <!-- LESSONS -->
+  <section id="lessons">
+    <h2>Interactive Lessons</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Carbon Footprint</h3>
+        <p>Learn how daily actions impact carbon emissions.</p>
+        <div class="progress-container"><div class="progress" style="width: 70%;"></div></div>
+        <button class="btn">Start Lesson</button>
+      </div>
+      <div class="card">
+        <h3>Water Conservation</h3>
+        <p>Understand methods to save water at home and school.</p>
+        <div class="progress-container"><div class="progress" style="width: 40%;"></div></div>
+        <button class="btn">Start Lesson</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHALLENGES -->
+  <section id="challenges">
+    <h2>Challenges</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Plastic Ban Week</h3>
+        <p>Participate in reducing single-use plastics.</p>
+        <button class="btn">Join Challenge</button>
+      </div>
+      <div class="card">
+        <h3>Adopt a Plant</h3>
+        <p>Take care of a plant and track its growth.</p>
+        <button class="btn">Join Challenge</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZZES -->
+  <section id="quizzes">
+    <h2>Quizzes</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Water Conservation Quiz</h3>
+        <p>Test your knowledge about saving water.</p>
+        <button class="btn" onclick="alert('Quiz Started!')">Take Quiz</button>
+      </div>
+      <div class="card">
+        <h3>Waste Management Quiz</h3>
+        <p>Identify ways to manage household waste effectively.</p>
+        <button class="btn" onclick="alert('Quiz Started!')">Take Quiz</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REAL-WORLD TASKS -->
+  <section id="tasks">
+    <h2>Real-World Tasks</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Neighborhood Clean-Up</h3>
+        <p>Participate and upload proof of cleaning activity.</p>
+        <button class="btn">Upload Proof</button>
+      </div>
+      <div class="card">
+        <h3>Rainwater Harvesting Demo</h3>
+        <p>Learn and implement water harvesting techniques.</p>
+        <button class="btn">Upload Proof</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section class="leaderboard">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Student</th>
+          <th>School/College</th>
+          <th>Eco Points</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <tr><td>1</td><td>Priya Sharma</td><td>Delhi Public School</td><td>120</td></tr>
+        <tr><td>2</td><td>Rohit Singh</td><td>St. Xavier's College</td><td>110</td></tr>
+        <tr><td>3</td><td>Aanya Patel</td><td>Delhi University</td><td>95</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+  // ===== DASHBOARD INTERACTIVITY =====
+  let ecoPoints = 0;
+  let streak = 0;
+
+  function earnPoints(points) {
+    ecoPoints += points;
+    document.getElementById('ecoPoints').innerText = ecoPoints;
+    // Add a badge if points exceed thresholds
+    if(ecoPoints >= 50 && !document.getElementById('greenBadge')) {
+      const badge = document.createElement('div');
+      badge.className = 'badge';
+      badge.id = 'greenBadge';
+      badge.innerText = 'Green Warrior';
+      document.getElementById('badges').appendChild(badge);
+    }
+  }
+
+  function increaseStreak() {
+    streak += 1;
+    document.getElementById('streak').innerText = streak + ' days';
+  }
+
+  // ===== PROGRESS ANIMATION =====
+  document.querySelectorAll('.progress').forEach(bar => {
+    let width = bar.style.width;
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = width; }, 100);
+  });
+</script>
+
+</body>
+</html>

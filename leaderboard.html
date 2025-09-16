@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoChallenge Leaderboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary-green: #16a34a;
+  --secondary-green: #22c55e;
+  --accent-blue: #0ea5e9;
+  --bg-color: #f0fdf4;
+  --text-color: #065f46;
+  --muted: #4b5563;
+  --radius: 12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+body{background:var(--bg-color);color:var(--text-color);}
+header{display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;background:linear-gradient(to right,var(--primary-green),var(--secondary-green));color:white;border-radius:0 0 12px 12px;}
+header h1{font-size:1.5rem;}
+nav button{margin-left:1rem;background:rgba(255,255,255,0.2);border:none;padding:0.4rem 0.8rem;border-radius:8px;color:white;cursor:pointer;}
+nav button.active{background:white;color:var(--primary-green);}
+.container{max-width:1200px;margin:2rem auto;padding:0 1rem;}
+.filters{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.filters button{padding:0.5rem 1rem;border:none;border-radius:8px;background:var(--primary-green);color:white;cursor:pointer;}
+.filters button.active{background:var(--secondary-green);}
+.podium{display:flex;justify-content:center;gap:1rem;margin-bottom:2rem;}
+.podium .student{background:white;padding:1rem;border-radius:12px;text-align:center;flex:1;position:relative;box-shadow:0 4px 15px rgba(0,0,0,0.1);}
+.podium .student img{width:64px;height:64px;border-radius:50%;margin-bottom:0.5rem;}
+.podium .student .rank{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent-blue);color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.leaderboard table{width:100%;border-collapse:collapse;margin-bottom:2rem;}
+.leaderboard th, .leaderboard td{padding:0.6rem 1rem;text-align:left;}
+.leaderboard tr:nth-child(even){background:rgba(16,185,129,0.1);}
+.badges{display:flex;gap:0.6rem;overflow-x:auto;margin-bottom:2rem;}
+.badge{flex:0 0 auto;padding:0.6rem 1rem;background:white;border-radius:12px;box-shadow:0 3px 8px rgba(0,0,0,0.1);text-align:center;cursor:pointer;transition:0.2s;}
+.badge.locked{opacity:0.5;filter:grayscale(40%);}
+.progress-bar{height:12px;background:rgba(0,0,0,0.1);border-radius:6px;overflow:hidden;margin-top:0.5rem;}
+.progress-fill{height:100%;background:var(--primary-green);width:0%;transition:width 1.2s;}
+.cta-buttons{display:flex;gap:1rem;margin-bottom:2rem;}
+.cta-buttons button{flex:1;padding:0.8rem 1rem;border:none;border-radius:12px;background:var(--secondary-green);color:white;font-weight:600;cursor:pointer;}
+@media(max-width:768px){.podium{flex-direction:column;align-items:center;}.leaderboard table{font-size:0.85rem;}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>EcoChallenge Leaderboard</h1>
+  <nav>
+    <button class="active">Home</button>
+    <button>Challenges</button>
+    <button>Leaderboard</button>
+    <button>Profile</button>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="filters">
+    <button class="active">School Level</button>
+    <button>City Level</button>
+    <button>National Level</button>
+  </div>
+
+  <!-- Podium Top 3 -->
+  <div class="podium">
+    <div class="student">
+      <div class="rank">2</div>
+      <img src="https://i.pravatar.cc/60?img=32" alt="Rahul">
+      <div><strong>Rahul</strong></div>
+      <div>Green Valley School</div>
+      <div>480 pts</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+    </div>
+    <div class="student">
+      <div class="rank">1</div>
+      <img src="https://i.pravatar.cc/60?img=44" alt="Aditi">
+      <div><strong>Aditi</strong></div>
+      <div>Sunshine College</div>
+      <div>520 pts</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:95%"></div></div>
+    </div>
+    <div class="student">
+      <div class="rank">3</div>
+      <img src="https://i.pravatar.cc/60?img=12" alt="Sneha">
+      <div><strong>Sneha</strong></div>
+      <div>Green High School</div>
+      <div>460 pts</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+    </div>
+  </div>
+
+  <!-- Full Leaderboard Table -->
+  <div class="leaderboard">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>School/College</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>4</td><td>Rehan</td><td>City High School</td><td>420</td></tr>
+        <tr><td>5</td><td>Priya</td><td>Sunshine College</td><td>400</td></tr>
+        <tr><td>6</td><td>Rahul K.</td><td>Green Valley School</td><td>390</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Badges / Achievements -->
+  <div class="badges">
+    <div class="badge">🏅 Green Warrior</div>
+    <div class="badge">♻️ Waste Champion</div>
+    <div class="badge locked">🌱 Tree Planter</div>
+    <div class="badge">💧 Water Saver</div>
+  </div>
+
+  <!-- Call-to-action Buttons -->
+  <div class="cta-buttons">
+    <button>Take New Challenge</button>
+    <button>Earn More Points</button>
+  </div>
+</div>
+
+<script>
+// Example: switch leaderboard filters
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    alert('Leaderboard filtered by: '+btn.textContent);
+  });
+});
+</script>
+
+</body>
+</html>
