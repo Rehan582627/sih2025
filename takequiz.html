@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz: Water Conservation - EcoSarthi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== GLOBAL STYLES ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    body { background-color: #f4f8f6; color: #333; line-height: 1.6; }
+    
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    header h1 { font-size: 1.8rem; }
+
+    /* ===== QUIZ CONTAINER ===== */
+    .quiz-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+    .quiz-container h2 {
+      text-align: center;
+      color: #388e3c;
+      margin-bottom: 2rem;
+    }
+
+    /* ===== QUESTION STYLES ===== */
+    .question-block {
+      margin-bottom: 2rem;
+    }
+    .question-block p {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .options label {
+      display: block;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .options label:hover {
+      background-color: #e8f5e9; /* Light green on hover */
+      border-color: #a5d6a7;
+    }
+    .options input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: block;
+      width: 100%;
+      background: #388e3c;
+      color: #fff;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .btn:hover { background: #2e7d32; }
+    
+    /* ===== RESULTS CONTAINER (Initially hidden) ===== */
+    #results-container {
+      display: none;
+      text-align: center;
+      animation: fadeIn 0.5s;
+    }
+    #results-container h2 {
+      color: #4caf50;
+    }
+    #score-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    #eco-points-text {
+      font-size: 1.2rem;
+      color: #388e3c;
+      margin-bottom: 2rem;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>EcoSarthi 🌱</h1>
+</header>
+
+<main>
+  <div class="quiz-container">
+    <div id="quiz-form-container">
+      <h2>Water Conservation Quiz</h2>
+      <form id="quiz-form">
+        <div class="question-block">
+          <p>1. What is the most significant use of water inside a typical household?</p>
+          <div class="options">
+            <label><input type="radio" name="q1" value="a"> Kitchen Sink</label>
+            <label><input type="radio" name="q1" value="b"> Washing Machine</label>
+            <label><input type="radio" name="q1" value="c"> Toilet Flushing</label>
+            <label><input type="radio" name="q1" value="d"> Drinking</label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p>2. What is the best time of day to water your garden to minimize evaporation?</p>
+          <div class="options">
+            <label><input type="radio" name="q2" value="a"> Early Morning or Late Evening</label>
+            <label><input type="radio" name="q2" value="b"> During the hottest part of the day (noon)</label>
+            <label><input type="radio" name="q2" value="c"> Any time is fine</label>
+            <label><input type="radio" name="q2" value="d"> Only when it's cloudy</label>
+          </div>
+        </div>
+        
+        <div class="question-block">
+            <p>3. The process of collecting and storing rainwater is called:</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="a"> Water Purification</label>
+                <label><input type="radio" name="q3" value="b"> Rainwater Harvesting</label>
+                <label><input type="radio" name="q3" value="c"> Irrigation</label>
+                <label><input type="radio" name="q3" value="d"> Desalination</label>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <p>4. A small, continuous drip from a faucet can waste how much water?</p>
+            <div class="options">
+                <label><input type="radio" name="q4" value="a"> A few drops a day</label>
+                <label><input type="radio" name="q4" value="b"> About a liter a week</label>
+                <label><input type="radio" name="q4" value="c"> Less than a bucket a month</label>
+                <label><input type="radio" name="q4" value="d"> More than 20 gallons (75 liters) a day</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn">Submit Answers</button>
+      </form>
+    </div>
+
+    <div id="results-container">
+        <h2>Quiz Results</h2>
+        <p id="score-text">You answered 0 out of 4 correctly.</p>
+        <p id="eco-points-text">You've earned 0 Eco Points! ✨</p>
+        <button class="btn" onclick="restartQuiz()">Try Again</button>
+    </div>
+  </div>
+</main>
+
+<script>
+  const quizForm = document.getElementById('quiz-form');
+  const quizContainer = document.getElementById('quiz-form-container');
+  const resultsContainer = document.getElementById('results-container');
+  const scoreText = document.getElementById('score-text');
+  const ecoPointsText = document.getElementById('eco-points-text');
+
+  // Define the correct answers
+  const correctAnswers = ['c', 'a', 'b', 'd'];
+  const totalQuestions = correctAnswers.length;
+
+  quizForm.addEventListener('submit', function(event) {
+    event.preventDefault(); // Stop the page from reloading
+
+    let score = 0;
+    const formData = new FormData(quizForm);
+    
+    // Loop through questions to check answers
+    for (let i = 0; i < totalQuestions; i++) {
+        const userAnswer = formData.get(`q${i + 1}`);
+        if (userAnswer === correctAnswers[i]) {
+            score++;
+        }
+    }
+    
+    // Calculate Eco Points (e.g., 15 points per correct answer)
+    const pointsEarned = score * 15;
+
+    // Update the results text
+    scoreText.innerText = `You answered ${score} out of ${totalQuestions} correctly.`;
+    ecoPointsText.innerText = `You've earned ${pointsEarned} Eco Points! ✨`;
+
+    // Hide the quiz and show the results
+    quizContainer.style.display = 'none';
+    resultsContainer.style.display = 'block';
+  });
+
+  function restartQuiz() {
+    // Reset the form for another attempt
+    quizForm.reset();
+    
+    // Hide results and show the quiz again
+    resultsContainer.style.display = 'none';
+    quizContainer.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

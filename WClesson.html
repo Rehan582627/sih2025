@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson: Water Conservation - EcoSarthi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== GLOBAL STYLES ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    body { background-color: #f4f8f6; color: #333; line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    header h1 { font-size: 1.8rem; }
+
+    /* ===== MAIN CONTENT ===== */
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    /* ===== MODULE SELECTION SCREEN ===== */
+    #module-selection {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+    #module-selection h2 {
+      text-align: center;
+      color: #388e3c;
+      margin-bottom: 2rem;
+    }
+    .module-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .module-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden; /* Important for animation */
+      transition: box-shadow 0.3s;
+    }
+    .module-card:hover {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+    .module-header h3 {
+      color: #388e3c;
+    }
+    .arrow {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+    .module-card.expanded .arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Collapsible Content */
+    .sub-lessons-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+      padding: 0 1.5rem;
+    }
+    .module-card.expanded .sub-lessons-content {
+      max-height: 300px; /* Adjust as needed */
+      padding: 1.5rem 1.5rem;
+    }
+    
+    .sub-lessons-content ul {
+      list-style-type: none;
+      padding-left: 0;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    .sub-lessons-content li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .sub-lessons-content li::before {
+      content: '💧';
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .reward-text {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .start-btn {
+      display: block;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    /* ===== LESSON CONTAINER (Initially hidden) ===== */
+    #lesson-container { display: none; }
+    .module { display: none; animation: fadeIn 0.5s ease-in-out; }
+    .module.active { display: block; }
+    #lesson-container { background-color: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+    .module h2 { color: #388e3c; margin-bottom: 1rem; border-bottom: 2px solid #a5d6a7; padding-bottom: 0.5rem; }
+    .module h3 { color: #4caf50; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    .module img { max-width: 100%; height: auto; border-radius: 8px; margin: 1rem auto; display: block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .navigation-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid #e0e0e0; padding-top: 1.5rem; }
+    .btn { background: #388e3c; color: #fff; padding: 0.7rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; transition: background 0.3s; font-size: 1rem; }
+    .btn:hover { background: #2e7d32; }
+    .btn:disabled { background: #a5d6a7; cursor: not-allowed; }
+    .btn-secondary { background-color: #757575; }
+    .btn-secondary:hover { background-color: #555; }
+    .module-counter { font-size: 0.9rem; color: #757575; }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>EcoSarthi 🌱</h1>
+</header>
+
+<main>
+  <div id="module-selection">
+    <h2>Water Conservation Lesson</h2>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-header" onclick="toggleSubLessons(this)">
+          <h3>Module 1: The Wonder of Water</h3>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="sub-lessons-content">
+          <ul>
+            <li>Why Water is So Important</li>
+            <li>The Journey of a Water Droplet: The Water Cycle</li>
+          </ul>
+          <p class="reward-text">✨ Complete to earn <strong>20 Eco Points!</strong></p>
+          <button class="btn start-btn" onclick="startLesson(1)">Start Module</button>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-header" onclick="toggleSubLessons(this)">
+            <h3>Module 2: Tracking Our Water Footprint</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="sub-lessons-content">
+            <ul>
+                <li>Water Use Inside Our Homes</li>
+                <li>Water Use Outside Our Homes (Indirect Footprint)</li>
+            </ul>
+            <p class="reward-text">✨ Complete to earn <strong>20 Eco Points!</strong></p>
+            <button class="btn start-btn" onclick="startLesson(2)">Start Module</button>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-header" onclick="toggleSubLessons(this)">
+            <h3>Module 3: Simple Ways to Save Water</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="sub-lessons-content">
+            <ul>
+                <li>Bathroom Water Savers</li>
+                <li>Kitchen & Laundry Savers</li>
+            </ul>
+            <p class="reward-text">✨ Complete to earn <strong>30 Eco Points!</strong></p>
+            <button class="btn start-btn" onclick="startLesson(3)">Start Module</button>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-header" onclick="toggleSubLessons(this)">
+            <h3>Module 4: Greening Your Garden Smartly</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="sub-lessons-content">
+            <ul>
+                <li>Smart Watering Techniques</li>
+                <li>Catching the Rain: Rainwater Harvesting</li>
+            </ul>
+            <p class="reward-text">✨ Complete to earn <strong>30 Eco Points!</strong></p>
+            <button class="btn start-btn" onclick="startLesson(4)">Start Module</button>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-header" onclick="toggleSubLessons(this)">
+            <h3>Module 5: Becoming a Water Warrior</h3>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="sub-lessons-content">
+            <ul>
+                <li>The Threat of Water Pollution</li>
+                <li>Your Mission to Conserve Water</li>
+            </ul>
+            <p class="reward-text">✨ Complete to earn <strong>50 Eco Points!</strong></p>
+            <button class="btn start-btn" onclick="startLesson(5)">Start Module</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="lesson-container">
+    <button class="btn btn-secondary" style="margin-bottom: 1.5rem;" onclick="showModuleList()">← Back to Module List</button>
+    
+    <div id="module-1" class="module">
+        <h2>Module 1: The Wonder of Water</h2>
+        <img src="https://images.unsplash.com/photo-1545349421-5f269a3b832b?q=80&w=1470" alt="Diagram of the Water Cycle">
+        <h3>Why is Water So Important?</h3>
+        <p>Water is life! It covers over 70% of the Earth's surface and is essential for every living thing. Our bodies are made of about 60% water. It helps us digest food, regulates our body temperature, and carries nutrients to our cells.</p>
+        <h3>The Journey of a Water Droplet: The Water Cycle</h3>
+        <p>Water is constantly moving in a cycle of <strong>Evaporation</strong>, <strong>Condensation</strong>, and <strong>Precipitation</strong>. This means the water you drink today might have been in a dinosaur's puddle millions of years ago!</p>
+    </div>
+    
+    <div id="module-2" class="module">
+        <h2>Module 2: Tracking Our Water Footprint</h2>
+        <img src="https://images.unsplash.com/photo-1621282249302-34311855a4a7?q=80&w=1470" alt="Water usage infographic for a home">
+        <h3>Water Use Inside Our Homes</h3>
+        <p>The biggest water users at home are toilets and showers. A single toilet flush can use 6-10 liters! Long showers and running taps also contribute significantly. This is our "direct" water footprint.</p>
+        <h3>Water Use Outside Our Homes</h3>
+        <p>Water is also used to grow our food and make our clothes. It takes about 1,800 gallons of water to produce a single pair of jeans! This is our "indirect" water footprint.</p>
+    </div>
+
+    <div id="module-3" class="module">
+        <h2>Module 3: Simple Ways to Save Water</h2>
+        </div>
+    <div id="module-4" class="module">
+        <h2>Module 4: Greening Your Garden Smartly</h2>
+        </div>
+    <div id="module-5" class="module">
+        <h2>Module 5: Becoming a Water Warrior</h2>
+        </div>
+
+    <div class="navigation-controls">
+      <button id="prevBtn" class="btn" onclick="changeModule(-1)">Previous</button>
+      <span id="module-counter" class="module-counter">Module 1 of 5</span>
+      <button id="nextBtn" class="btn" onclick="changeModule(1)">Next</button>
+    </div>
+  </div>
+</main>
+
+<script>
+  let currentModule = 1;
+  const totalModules = 5;
+  
+  const moduleSelectionDiv = document.getElementById('module-selection');
+  const lessonContainerDiv = document.getElementById('lesson-container');
+  const modules = document.querySelectorAll('.module');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counter = document.getElementById('module-counter');
+
+  function toggleSubLessons(headerElement) {
+    const card = headerElement.parentElement;
+    card.classList.toggle('expanded');
+  }
+
+  // --- View Switching Functions ---
+  
+  function startLesson(moduleNumber) {
+    moduleSelectionDiv.style.display = 'none';
+    lessonContainerDiv.style.display = 'block';
+    
+    currentModule = moduleNumber;
+    showModule(currentModule);
+  }
+
+  function showModuleList() {
+    lessonContainerDiv.style.display = 'none';
+    moduleSelectionDiv.style.display = 'block';
+  }
+
+  // --- Lesson Navigation Functions ---
+
+  function showModule(moduleNumber) {
+    modules.forEach(module => module.classList.remove('active'));
+    const activeModule = document.getElementById(`module-${moduleNumber}`);
+    if(activeModule) {
+      activeModule.classList.add('active');
+    }
+    counter.innerText = `Module ${moduleNumber} of ${totalModules}`;
+    prevBtn.disabled = (moduleNumber === 1);
+    
+    if (moduleNumber === totalModules) {
+      nextBtn.innerText = 'Take Quiz';
+      nextBtn.onclick = function() {
+          // THIS IS THE MODIFIED LINE
+          window.location.href = 'takequiz.html';
+      };
+    } else {
+      nextBtn.innerText = 'Next';
+      nextBtn.onclick = function() { changeModule(1); };
+    }
+  }
+
+  function changeModule(direction) {
+    currentModule += direction;
+    if (currentModule < 1) currentModule = 1;
+    if (currentModule > totalModules) currentModule = totalModules;
+    showModule(currentModule);
+  }
+</script>
+
+</body>
+</html>

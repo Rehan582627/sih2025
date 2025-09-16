@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoSarthi Teacher Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --green:#2e7d32;
+      --light-green:#66bb6a;
+      --blue:#0288d1;
+      --earth:#8d6e63;
+      --bg:#f4f9f4;
+      --card-bg:#fff;
+      --shadow:0 4px 12px rgba(0,0,0,0.08);
+      --radius:12px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
+    body{display:flex;height:100vh;background:var(--bg);overflow:hidden;}
+    a{text-decoration:none;color:inherit;}
+
+    /* Sidebar */
+    .sidebar{
+      width:240px;background:var(--green);color:#fff;transition:width .3s;flex-shrink:0;display:flex;flex-direction:column;
+    }
+    .sidebar.collapsed{width:70px;}
+    .sidebar h2{text-align:center;padding:20px 0;font-size:20px;font-weight:bold;}
+    .nav a{display:flex;align-items:center;padding:12px 18px;margin:6px 0;border-radius:var(--radius);transition:.2s;gap:10px;}
+    .nav a:hover{background:var(--light-green);}
+    .badge{background:red;color:#fff;padding:2px 6px;border-radius:12px;font-size:12px;margin-left:auto;}
+    .toggle{margin-top:auto;text-align:center;cursor:pointer;padding:12px;background:var(--light-green);border-radius:var(--radius);margin-bottom:15px;}
+
+    /* Main */
+    .main{flex:1;display:flex;flex-direction:column;overflow-y:auto;}
+    header{background:var(--card-bg);box-shadow:var(--shadow);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;}
+    .user-info{display:flex;align-items:center;gap:12px;}
+    .user-info img{width:50px;height:50px;border-radius:50%;border:2px solid var(--green);}
+    .eco-points{background:var(--light-green);color:#fff;padding:5px 12px;border-radius:20px;font-weight:bold;}
+
+    /* Hero */
+    .hero{padding:25px;background:linear-gradient(120deg,var(--green),var(--blue));color:#fff;border-radius:var(--radius);margin:20px;box-shadow:var(--shadow);}
+    .hero h1{font-size:28px;margin-bottom:10px;}
+    .ticker{margin:10px 0;height:30px;overflow:hidden;position:relative;}
+    .ticker span{position:absolute;width:100%;animation:scroll 12s linear infinite;}
+    @keyframes scroll{0%{top:0;}100%{top:-100%;}}
+    .hero-buttons button{margin:10px 10px 0 0;padding:10px 16px;border:none;border-radius:var(--radius);cursor:pointer;background:var(--card-bg);color:var(--green);font-weight:bold;transition:transform .2s;}
+    .hero-buttons button:hover{transform:scale(1.05);}
+
+    /* Overview Cards */
+    .overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;padding:20px;}
+    .overview .card{background:var(--card-bg);padding:20px;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center;transition:.3s;}
+    .overview .card:hover{transform:translateY(-4px);box-shadow:0 6px 14px rgba(0,0,0,0.12);}
+    .overview .card h2{font-size:22px;color:var(--green);margin-bottom:5px;}
+    .overview .card p{font-size:14px;color:#555;}
+
+    /* Student Table */
+    .student-section{padding:20px;}
+    .student-section input{padding:8px;border-radius:8px;border:1px solid #ccc;margin-bottom:10px;width:100%;}
+    table{width:100%;border-collapse:collapse;}
+    th,td{padding:12px;text-align:left;border-bottom:1px solid #ddd;}
+    tr:hover{background:rgba(102,187,106,0.1);}
+
+    /* Chart section */
+    .chart-section{padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;}
+    .chart-box{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:.3s;}
+    .chart-box:hover{transform:translateY(-3px);}
+    .insight{margin-top:10px;font-size:14px;color:var(--green);font-weight:500;}
+
+    /* Tasks */
+    .tasks{padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+    .task-card{background:var(--card-bg);padding:20px;border-radius:var(--radius);box-shadow:var(--shadow);transition:.3s;}
+    .task-card:hover{transform:translateY(-3px);}
+    .progress-bar{height:12px;background:#ddd;border-radius:10px;overflow:hidden;margin-top:8px;}
+    .progress-bar span{display:block;height:100%;background:var(--blue);width:0%;animation:grow 2s forwards;}
+    @keyframes grow{from{width:0;}to{width:70%;}}
+
+    /* Community */
+    .community{padding:20px;}
+    .post{background:var(--card-bg);padding:15px;border-radius:var(--radius);margin-bottom:12px;box-shadow:var(--shadow);}
+    .actions button{margin-right:10px;padding:5px 10px;border:none;border-radius:var(--radius);cursor:pointer;background:var(--light-green);color:#fff;transition:.2s;}
+    .actions button:hover{background:var(--blue);}
+
+    /* Footer */
+    footer{padding:15px;text-align:center;background:var(--card-bg);box-shadow:var(--shadow);margin-top:auto;}
+
+    /* Responsive */
+    @media(max-width:900px){
+      .sidebar{position:absolute;height:100vh;z-index:100;top:0;}
+      .main{margin-left:0;}
+      .overview, .chart-section, .tasks{grid-template-columns:1fr;}
+      table{font-size:14px;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h2>Eco🌿Sarthi</h2>
+    <div class="nav">
+      <a href="#dashboard">📊 Dashboard</a>
+      <a href="#students">👩‍🎓 Students <span class="badge">8</span></a>
+      <a href="#tasks">✅ Tasks</a>
+      <a href="#charts">📈 Reports</a>
+      <a href="#community">🌍 Community</a>
+      <a href="#settings">⚙️ Settings</a>
+      <a href="#logout">🚪 Logout</a>
+    </div>
+    <div class="toggle" onclick="toggleSidebar()">⬅</div>
+  </div>
+
+  <div class="main">
+    <!-- Header -->
+    <header>
+      <h2>Welcome back, Mrs. Sharma!</h2>
+      <div class="user-info">
+        <span class="eco-points">Eco Points: 4500</span>
+        <img src="https://i.pravatar.cc/100" alt="Teacher">
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="dashboard">
+      <h1>Guide your students to a greener future 🌱</h1>
+      <div class="ticker">
+        <span>🌍 Earth Hour this week • 🌱 School competition ongoing • 💧 Water Saving Campaign starts Monday</span>
+      </div>
+      <div class="hero-buttons">
+        <button>Assign New Task</button>
+        <button>Upload Materials</button>
+        <button>View Reports</button>
+      </div>
+    </section>
+
+    <!-- Overview Cards -->
+    <section class="overview">
+      <div class="card">
+        <h2>120</h2>
+        <p>Total Students</p>
+      </div>
+      <div class="card">
+        <h2>35</h2>
+        <p>Tasks Completed</p>
+      </div>
+      <div class="card">
+        <h2>10</h2>
+        <p>Pending Approvals</p>
+      </div>
+      <div class="card">
+        <h2>4500</h2>
+        <p>Total Eco Points</p>
+      </div>
+    </section>
+
+    <!-- Student Table -->
+    <section id="students" class="student-section">
+      <h3>Student Progress</h3>
+      <input type="text" id="studentSearch" placeholder="Search students...">
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Class</th><th>Eco Points</th><th>Status</th></tr>
+        </thead>
+        <tbody id="studentTable">
+          <tr><td>Riya</td><td>10A</td><td>1500</td><td>Completed</td></tr>
+          <tr><td>Aryan</td><td>9B</td><td>1400</td><td>In Progress</td></tr>
+          <tr><td>Vikram</td><td>10B</td><td>1200</td><td>Pending</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Tasks -->
+    <section id="tasks" class="tasks">
+      <div class="task-card">
+        <h3>Plastic Awareness Quiz</h3>
+        <p>Status: In Progress</p>
+        <div class="progress-bar"><span style="width:60%"></span></div>
+      </div>
+      <div class="task-card">
+        <h3>Tree Plantation Activity</h3>
+        <p>Status: Completed ✅</p>
+        <div class="progress-bar"><span style="width:100%;background:var(--green)"></span></div>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section id="charts" class="chart-section">
+      <div class="chart-box">
+        <h3>Class Eco Impact</h3>
+        <canvas id="doughnutChart"></canvas>
+        <p class="insight">Trees 🌳 lead the class impact!</p>
+      </div>
+      <div class="chart-box">
+        <h3>Weekly Participation</h3>
+        <canvas id="lineChart"></canvas>
+        <p class="insight">Participation increasing steadily 🚀</p>
+      </div>
+      <div class="chart-box">
+        <h3>Student vs Class Average</h3>
+        <canvas id="barChart"></canvas>
+        <p class="insight">Aryan is ahead in water conservation 💧</p>
+      </div>
+    </section>
+
+    <!-- Community -->
+    <section id="community" class="community">
+      <h3>Community Feed</h3>
+      <div class="post">
+        <p><b>Riya</b> completed “Zero Waste Week” ♻️</p>
+        <div class="actions">
+          <button>👏 Cheer</button><button>💬 Comment</button>
+        </div>
+      </div>
+      <div class="post">
+        <p><b>Aryan</b> planted 15 trees 🌳</p>
+        <div class="actions">
+          <button>👏 Cheer</button><button>💬 Comment</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>🌱 EcoSarthi — “Teaching today for a greener tomorrow.”</footer>
+  </div>
+
+  <script>
+    // Sidebar toggle
+    function toggleSidebar(){document.getElementById("sidebar").classList.toggle("collapsed");}
+
+    // Student search
+    document.getElementById('studentSearch').addEventListener('keyup',function(){
+      let filter=this.value.toLowerCase();
+      let rows=document.getElementById('studentTable').getElementsByTagName('tr');
+      Array.from(rows).forEach(row=>{
+        let text=row.textContent.toLowerCase();
+        row.style.display=text.includes(filter)?'':'none';
+      });
+    });
+
+    // Chart.js setup
+    const doughnutCtx=document.getElementById('doughnutChart');
+    new Chart(doughnutCtx,{type:'doughnut',data:{
+      labels:['Trees 🌳','Water 💧','Energy ⚡','Waste ♻️'],
+      datasets:[{data:[120,80,60,40],backgroundColor:['#66bb6a','#29b6f6','#ffca28','#8d6e63']}]
+    },options:{plugins:{legend:{position:'bottom'}}}});
+
+    const lineCtx=document.getElementById('lineChart');
+    new Chart(lineCtx,{type:'line',data:{
+      labels:['Week1','Week2','Week3','Week4','Week5','Week6'],
+      datasets:[{label:'Participation',data:[60,70,75,80,85,90],fill:false,borderColor:'#0288d1',tension:0.3}]
+    },options:{responsive:true}});
+
+    const barCtx=document.getElementById('barChart');
+    new Chart(barCtx,{type:'bar',data:{
+      labels:['Trees','Water','Energy','Waste'],
+      datasets:[
+        {label:'Aryan',data:[30,40,20,10],backgroundColor:'#66bb6a'},
+        {label:'Class Avg',data:[25,35,25,15],backgroundColor:'#29b6f6'}
+      ]
+    },options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+  </script>
+</body>
+</html>
